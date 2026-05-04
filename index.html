@@ -276,36 +276,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const KPI_DEFS = [
   { section:'Disponibilidad y utilización', freq:'sem', kpis:[
-    {id:'disp_cam',  name:'Disponibilidad de camiones',           meta:95,  unit:'%',    dir:'up'},
-    {id:'disp_flt',  name:'Disponibilidad de FLT',                meta:95,  unit:'%',    dir:'up'},
-    {id:'util_cam',  name:'Asset utilización camiones',           meta:85,  unit:'%',    dir:'up'},
-    {id:'util_flt',  name:'Asset utilización FLT',                meta:85,  unit:'%',    dir:'up'},
+    {id:'disp_cam',  name:'Disponibilidad de camiones',           meta:90,   unit:'%',    dir:'up'},
+    {id:'disp_flt',  name:'Disponibilidad de FLT',                meta:90,   unit:'%',    dir:'up'},
+    {id:'util_cam',  name:'Asset utilización camiones',           meta:87,   unit:'%',    dir:'up'},
+    {id:'util_flt',  name:'Asset utilización FLT',                meta:87,   unit:'%',    dir:'up'},
   ]},
   { section:'Checklist y documentación', freq:'sem', kpis:[
-    {id:'docs_venc', name:'Documentos vencidos',                   meta:0,   unit:'#',    dir:'down', ml:'Meta = 0'},
-    {id:'chk_adh',   name:'Adherencia checklist ingreso y salida', meta:90,  unit:'%',    dir:'up'},
-    {id:'nov_ratio', name:'Novedades detectadas vs cerradas',      meta:90,  unit:'%',    dir:'up'},
+    {id:'docs_venc', name:'Documentos vencidos',                   meta:0,    unit:'#',    dir:'down', ml:'Meta = 0'},
+    {id:'chk_adh',   name:'Adherencia checklist ingreso y salida', meta:100,  unit:'%',    dir:'up'},
+    {id:'nov_ratio', name:'Novedades detectadas vs cerradas',      meta:100,  unit:'%',    dir:'up'},
   ]},
   { section:'Mantenimiento', freq:'sem', kpis:[
-    {id:'prev_adh',  name:'KPI % Adherencia a preventivos',       meta:95,  unit:'%',    dir:'up'},
-    {id:'corr_adh',  name:'KPI % Adherencia a correctivos',       meta:90,  unit:'%',    dir:'up'},
+    {id:'prev_adh',  name:'KPI % Adherencia a preventivos',       meta:100,  unit:'%',    dir:'up'},
+    {id:'corr_adh',  name:'KPI % Adherencia a correctivos',       meta:100,  unit:'%',    dir:'up'},
   ]},
   { section:'Estándar de flota', freq:'mes', kpis:[
-    {id:'std_mand',  name:'% Adherencia estándar mandatorio',     meta:95,  unit:'%',    dir:'up'},
-    {id:'std_nom',   name:'% Adherencia estándar no mandatorio',  meta:90,  unit:'%',    dir:'up'},
-    {id:'std_ejec',  name:'% Ejecución estándar de flota',        meta:95,  unit:'%',    dir:'up'},
+    {id:'std_mand',  name:'% Adherencia estándar mandatorio',     meta:100,  unit:'%',    dir:'up'},
+    {id:'std_nom',   name:'% Adherencia estándar no mandatorio',  meta:100,  unit:'%',    dir:'up'},
+    {id:'std_ejec',  name:'% Ejecución estándar de flota',        meta:100,  unit:'%',    dir:'up'},
   ]},
   { section:'Combustible y llantas', freq:'mes', kpis:[
-    {id:'bgt_comb',  name:'Presupuesto combustible de flota',     meta:null,unit:'$M',   dir:'down', ml:'Referencia BGT'},
-    {id:'rend_cam',  name:'Rendimiento combustible camiones',     meta:4.5, unit:'km/L', dir:'up'},
-    {id:'rend_flt',  name:'Rendimiento combustible FLT',          meta:4.0, unit:'km/L', dir:'up'},
-    {id:'calib_ll',  name:'Adherencia calibración llantas',       meta:90,  unit:'%',    dir:'up'},
+    {id:'bgt_comb',  name:'Presupuesto combustible de flota',     meta:null, unit:'$M',   dir:'down', ml:'Referencia BGT'},
+    {id:'rend_cam',  name:'Rendimiento combustible camiones',     meta:12.5, unit:'km/L', dir:'up'},
+    {id:'rend_flt',  name:'Rendimiento combustible FLT',          meta:5.2,  unit:'km/L', dir:'up'},
+    {id:'calib_ll',  name:'Adherencia calibración llantas',       meta:90,   unit:'%',    dir:'up'},
   ]},
   { section:'Presupuesto, stock y sostenibilidad', freq:'mes', kpis:[
-    {id:'bgt_corr',  name:'Presupuesto correctivos ABI',          meta:null,unit:'$M',   dir:'down', ml:'Referencia BGT'},
-    {id:'stock_adh', name:'% Adherencia stock repuestos',         meta:90,  unit:'%',    dir:'up'},
-    {id:'compar',    name:'Número de comparendos',                 meta:0,   unit:'#',    dir:'down', ml:'Meta = 0'},
-    {id:'ambiental', name:'PI problemas ambientales',             meta:0,   unit:'#',    dir:'down', ml:'Meta = 0'},
+    {id:'bgt_corr',  name:'Presupuesto correctivos ABI',          meta:null, unit:'$M',   dir:'down', ml:'Referencia BGT'},
+    {id:'stock_adh', name:'% Adherencia stock repuestos',         meta:90,   unit:'%',    dir:'up'},
+    {id:'compar',    name:'Número de comparendos',                 meta:0,    unit:'#',    dir:'down', ml:'Meta = 0'},
+    {id:'ambiental', name:'PI problemas ambientales',             meta:0,    unit:'#',    dir:'down', ml:'Meta = 0'},
   ]},
 ];
 
@@ -727,4 +727,5 @@ switchCity(currentCity);
 </script>
 </body>
 </html>
+
 
