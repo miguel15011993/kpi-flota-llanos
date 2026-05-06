@@ -12,9 +12,9 @@
   --bg:#F7F6F1; --surface:#fff; --surface2:#F5F4EE;
   --border:rgba(0,0,0,0.08); --border-m:rgba(0,0,0,0.15);
   --text:#000; --text2:#3F3D38; --text3:#7A7872;
-  --ok:#4A5C3A; --ok-l:#EAECDE; --ok-m:#959B7B;
+  --ok:#145C2A; --ok-l:#E6F4EC; --ok-m:#27AE60;
   --warn:#7A5A10; --warn-l:#FDF6DC; --warn-m:#E5B611;
-  --bad:#6B1420; --bad-l:#F7E5E7; --bad-m:#921A28;
+  --bad:#B71C1C; --bad-l:#FFEBEE; --bad-m:#E53935;
   --info:#1E3B4A; --info-l:#E3EDF2; --info-m:#325A6D;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -165,6 +165,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* ── CHARTS VIEW ── */
 .ch-wrap{padding:1.5rem 1.5rem 2rem}
 
+/* Filter bar */
+.ch-filter-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border-m);border-radius:10px;padding:10px 16px;margin-bottom:1.25rem;flex-wrap:wrap}
+.ch-filter-lbl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.ch-filter-sep{color:var(--abi-gold);font-size:18px;font-weight:300;padding:0 4px}
+.ch-filter-sel{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--text);background:var(--surface2);border:1px solid var(--border-m);border-radius:6px;padding:5px 10px;cursor:pointer;outline:none;transition:border-color .15s}
+.ch-filter-sel:focus{border-color:var(--abi-gold);box-shadow:0 0 0 2px rgba(229,182,17,0.15)}
+.ch-filter-info{margin-left:auto;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+
 /* Summary strip */
 .ch-summary{display:grid;grid-template-columns:repeat(4,1fr) 160px;gap:12px;margin-bottom:1.5rem;align-items:stretch}
 .ch-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:5px;border-left:4px solid}
@@ -181,9 +189,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* Alert */
 .ch-alert{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
-.ch-alert.bad{background:var(--bad-l);border:1px solid rgba(146,26,40,0.25)}
+.ch-alert.bad{background:var(--bad-l);border:1px solid rgba(229,57,53,0.35)}
 .ch-alert.warn{background:var(--warn-l);border:1px solid rgba(229,182,17,0.35)}
-.ch-alert.ok{background:var(--ok-l);border:1px solid rgba(149,155,123,0.4)}
+.ch-alert.ok{background:var(--ok-l);border:1px solid rgba(39,174,96,0.4)}
 .ch-alert-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .ch-alert-title.bad{color:var(--bad)} .ch-alert-title.warn{color:var(--warn)} .ch-alert-title.ok{color:var(--ok)}
 .ch-tags{display:flex;flex-wrap:wrap;gap:10px}
@@ -584,6 +592,7 @@ function showConfig() { currentView='config'; hideAll(); show('v-config'); rende
 function showCharts() {
   currentView='charts'; setActiveId(null); renderSidebar(); hideAll();
   show('v-charts'); document.getElementById('btn-charts').classList.add('active-view');
+  _chFrom = 0; _chTo = null;
   renderCharts();
 }
 
@@ -719,6 +728,22 @@ function renderOverview() {
 
 // ── CHARTS VIEW ──
 let _charts = {};
+let _chFrom = 0;
+let _chTo   = null;
+
+function setChartFrom(val) {
+  _chFrom = parseInt(val);
+  const sorted = [...getData().weeks].sort((a,b) => a.year*100+a.weekNum-(b.year*100+b.weekNum));
+  const maxTo = sorted.length - 1;
+  if (_chTo === null) _chTo = maxTo;
+  if (_chFrom > _chTo) _chTo = _chFrom;
+  renderCharts();
+}
+function setChartTo(val) {
+  _chTo = parseInt(val);
+  if (_chTo < _chFrom) _chFrom = _chTo;
+  renderCharts();
+}
 
 function renderCharts() {
   const weeks = getData().weeks;
@@ -733,8 +758,13 @@ function renderCharts() {
   Object.values(_charts).forEach(c => { try { c.destroy(); } catch(e){} });
   _charts = {};
 
-  const sorted  = [...weeks].sort((a,b) => a.year*100+a.weekNum-(b.year*100+b.weekNum));
-  const latest  = sorted[sorted.length - 1];
+  const allSorted = [...weeks].sort((a,b) => a.year*100+a.weekNum-(b.year*100+b.weekNum));
+  const maxIdx    = allSorted.length - 1;
+  if (_chTo === null || _chTo > maxIdx) _chTo = maxIdx;
+  if (_chFrom > _chTo) _chFrom = 0;
+
+  const sorted = allSorted.slice(_chFrom, _chTo + 1);
+  const latest = sorted[sorted.length - 1];
   const allKpis = KPI_DEFS.flatMap(s => s.kpis);
   const total   = allKpis.length;
 
@@ -868,7 +898,21 @@ function renderCharts() {
     </div>`;
   }).join('');
 
-  el.innerHTML = `<div class="ch-wrap">${summaryHtml}${alertHtml}${sectionsHtml}</div>`;
+  // ── Filter bar ──
+  const filterHtml = `<div class="ch-filter-bar">
+    <span class="ch-filter-lbl">Semana desde</span>
+    <select class="ch-filter-sel" onchange="setChartFrom(this.value)">
+      ${allSorted.map((w,i) => `<option value="${i}" ${i===_chFrom?'selected':''}>Sem ${w.weekNum} · ${w.year}</option>`).join('')}
+    </select>
+    <span class="ch-filter-sep">&#8594;</span>
+    <span class="ch-filter-lbl">hasta</span>
+    <select class="ch-filter-sel" onchange="setChartTo(this.value)">
+      ${allSorted.map((w,i) => `<option value="${i}" ${i===_chTo?'selected':''}>Sem ${w.weekNum} · ${w.year}</option>`).join('')}
+    </select>
+    <span class="ch-filter-info">${sorted.length} semana${sorted.length!==1?'s':''} seleccionada${sorted.length!==1?'s':''}</span>
+  </div>`;
+
+  el.innerHTML = `<div class="ch-wrap">${filterHtml}${summaryHtml}${alertHtml}${sectionsHtml}</div>`;
 
   // ── Donut chart ──
   Chart.defaults.color = '#888';
@@ -881,7 +925,7 @@ function renderCharts() {
       type: 'doughnut',
       data: {
         labels: ['Cumple','En riesgo','Incumple','Sin dato'],
-        datasets: [{ data:[cOk,cWarn,cBad,cEmpty], backgroundColor:['#959B7B','#E5B611','#921A28','#ddd'], borderWidth:0, hoverOffset:4 }]
+        datasets: [{ data:[cOk,cWarn,cBad,cEmpty], backgroundColor:['#27AE60','#E5B611','#E53935','#ddd'], borderWidth:0, hoverOffset:4 }]
       },
       options: {
         responsive:true, maintainAspectRatio:false, cutout:'68%',
@@ -904,7 +948,7 @@ function renderCharts() {
       const barColors = values.map(v => {
         if (v===null) return 'rgba(0,0,0,0.06)';
         const s = getStatus(kpi, v);
-        return s==='ok'?'rgba(149,155,123,0.85)':s==='warn'?'rgba(229,182,17,0.85)':'rgba(146,26,40,0.85)';
+        return s==='ok'?'rgba(39,174,96,0.85)':s==='warn'?'rgba(229,182,17,0.85)':'rgba(229,57,53,0.85)';
       });
 
       const datasets = [{
@@ -920,7 +964,7 @@ function renderCharts() {
           type: 'line',
           label: 'Meta',
           data: Array(sorted.length).fill(kpi.meta),
-          borderColor: 'rgba(146,26,40,0.6)',
+          borderColor: 'rgba(229,57,53,0.7)',
           borderDash: [5,3],
           borderWidth: 1.5,
           pointRadius: 0,
