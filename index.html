@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KPI Flota — AB InBev Zona Llanos</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
   --abi-black:#000; --abi-gold:#E5B611; --abi-gold-dark:#D1A33C; --abi-red:#921A28; --abi-green:#959B7B; --abi-blue:#325A6D;
@@ -37,6 +38,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .tbtn:hover{background:rgba(255,255,255,0.1)}
 .tbtn-gold{background:var(--abi-gold);color:var(--abi-black);border-color:var(--abi-gold);font-weight:600}
 .tbtn-gold:hover{background:var(--abi-gold-dark)}
+.tbtn.active-view{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.4)}
 
 /* ── CITY SWITCHER ── */
 .city-bar{background:var(--abi-black);border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;padding:0 1.5rem;gap:4px}
@@ -160,6 +162,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .htable td{padding:7px 10px;border-bottom:1px solid var(--border);font-size:12px}
 .htable tr:last-child td{border-bottom:none}
 
+/* ── CHARTS VIEW ── */
+.ch-wrap{padding:1.25rem 1.5rem 2rem}
+.ch-alert{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
+.ch-alert.bad{background:var(--bad-l);border:1px solid rgba(146,26,40,0.25)}
+.ch-alert.warn{background:var(--warn-l);border:1px solid rgba(229,182,17,0.35)}
+.ch-alert.ok{background:var(--ok-l);border:1px solid rgba(149,155,123,0.4)}
+.ch-alert-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ch-alert-title.bad{color:var(--bad)} .ch-alert-title.warn{color:var(--warn)} .ch-alert-title.ok{color:var(--ok)}
+.ch-tags{display:flex;flex-wrap:wrap;gap:8px}
+.ch-tag{border-radius:6px;padding:6px 10px;font-size:12px;line-height:1.5}
+.ch-tag.bad{background:rgba(146,26,40,0.1);border:1px solid rgba(146,26,40,0.3);color:var(--bad)}
+.ch-tag.warn{background:rgba(229,182,17,0.12);border:1px solid rgba(229,182,17,0.4);color:var(--warn)}
+.ch-tag strong{display:block;font-weight:600;margin-bottom:2px}
+.ch-tag .mono{font-family:'DM Mono',monospace;font-size:11px}
+.ch-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.ch-sec-title{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ch-sec-title::after{content:'';flex:1;height:0.5px;background:var(--border-m)}
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.ch-card{display:flex;flex-direction:column;gap:5px}
+.ch-name{font-size:11px;color:var(--text2);font-weight:500;line-height:1.3}
+.ch-status{font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
+.ch-status.ok{color:var(--ok)} .ch-status.warn{color:var(--warn)} .ch-status.bad{color:var(--bad)} .ch-status.empty{color:var(--text3)}
+.ch-box{position:relative;height:120px}
+
 /* ── CONFIG ── */
 .cfg-wrap{padding:1.5rem;max-width:560px}
 .cfg-title{font-size:17px;font-weight:600;margin-bottom:4px}
@@ -168,13 +194,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .cfg-card-title{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:6px}
 .cfg-step{width:20px;height:20px;border-radius:50%;background:var(--abi-gold);color:var(--abi-black);font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
 .cfg-hint{font-size:12px;color:var(--text3);margin:6px 0 10px;line-height:1.6}
-.cfg-input{font-family:'DM Mono',monospace;width:100%;padding:8px 12px;border:1px solid var(--border-m);border-radius:7px;font-size:13px;background:var(--surface);color:var(--text)}
-.cfg-input:focus{outline:none;border-color:var(--abi-gold);box-shadow:0 0 0 2px rgba(229,182,17,0.15)}
-.cfg-row{display:flex;gap:8px;margin-top:8px}
 .cfg-save{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:8px 18px;border-radius:6px;border:none;background:var(--abi-gold);color:var(--abi-black);cursor:pointer}
 .cfg-save:hover{background:var(--abi-gold-dark)}
-.cfg-test{font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 14px;border-radius:6px;border:1px solid var(--border-m);background:var(--surface);color:var(--text2);cursor:pointer}
-.cfg-test:hover{background:var(--surface2)}
 .status-msg{font-size:12px;padding:5px 12px;border-radius:6px;display:inline-block;margin-top:8px}
 .s-msg-ok{background:var(--ok-l);color:var(--ok)} .s-msg-err{background:var(--bad-l);color:var(--bad)} .s-msg-inf{background:var(--info-l);color:var(--info)}
 
@@ -190,6 +211,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .sum-strip{grid-template-columns:repeat(2,1fr)}
   .cal-grid{grid-template-columns:repeat(2,1fr)}
   .topbar-right .sync-pill{display:none}
+  .ch-grid{grid-template-columns:1fr}
 }
 @media print{.topbar,.city-bar,.sidebar,.page-footer{display:none}.main{overflow:visible}}
 </style>
@@ -209,8 +231,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="sync-dot" id="sync-dot"></div>
       <span id="sync-txt">Conectando...</span>
     </div>
-    <button class="tbtn" onclick="showOverview()">Vista general</button>
-    <button class="tbtn" onclick="showConfig()">⚙ Sync</button>
+    <button class="tbtn" id="btn-overview" onclick="showOverview()">Vista general</button>
+    <button class="tbtn" id="btn-charts"   onclick="showCharts()">&#128202; Gr&#225;ficas</button>
+    <button class="tbtn" onclick="showConfig()">&#9881; Sync</button>
     <button class="tbtn tbtn-gold" onclick="openModal()">+ Nueva semana</button>
   </div>
 </header>
@@ -248,6 +271,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div id="v-week"     style="display:none"></div>
     <div id="v-overview" style="display:none"></div>
+    <div id="v-charts"   style="display:none"></div>
     <div id="v-config"   style="display:none"></div>
   </main>
 </div>
@@ -321,6 +345,7 @@ const CITIES = {
 };
 
 let currentCity = localStorage.getItem('kpi_last_city') || 'yopal';
+let currentView = 'week';
 let cityState   = {};
 let saveTimers  = {};
 
@@ -328,7 +353,6 @@ Object.keys(CITIES).forEach(c => {
   cityState[c] = { data: { weeks:[] }, activeId: null };
 });
 
-// ── LOCAL CACHE ──
 function getData()     { return cityState[currentCity].data; }
 function getActiveId() { return cityState[currentCity].activeId; }
 function setActiveId(id) { cityState[currentCity].activeId = id; }
@@ -348,7 +372,6 @@ function setSyncUI(state, msg) {
   dot.className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
   txt.textContent = msg || '';
 }
-
 function tsNow() { return new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}); }
 
 // ── SUPABASE CRUD ──
@@ -417,22 +440,20 @@ function switchCity(city) {
   currentCity = city;
   localStorage.setItem('kpi_last_city', city);
   const info = CITIES[city];
-
-  // update tabs
   document.querySelectorAll('.city-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + city).classList.add('active');
-
-  // update labels
-  document.getElementById('brand-city').textContent    = `KPI Flota · ${info.label}`;
+  document.getElementById('brand-city').textContent         = `KPI Flota · ${info.label}`;
   document.getElementById('sidebar-city-label').textContent = `${info.label} · Semanas`;
   document.getElementById('empty-city-title').textContent   = `Sin semanas — ${info.label}`;
   document.getElementById('modal-city-label').textContent   = `Nueva semana — ${info.label}`;
 
   loadFromCloud(city).then(() => {
     renderSidebar();
+    if (!getData().weeks.length) { hideAll(); show('v-empty'); return; }
+    if (currentView === 'charts')   { showCharts(); return; }
+    if (currentView === 'overview') { showOverview(); return; }
     const id = getActiveId();
-    if (!getData().weeks.length) { hideAll(); show('v-empty'); }
-    else if (id && getData().weeks.find(w => w.id===id)) { selectWeek(id); }
+    if (id && getData().weeks.find(w => w.id===id)) { selectWeek(id); }
     else {
       const last = [...getData().weeks].sort((a,b) => b.year*100+b.weekNum-(a.year*100+a.weekNum))[0];
       selectWeek(last.id);
@@ -498,17 +519,32 @@ function renderSidebar() {
 }
 
 // ── VIEWS ──
-function hideAll() { ['v-empty','v-week','v-overview','v-config'].forEach(id=>document.getElementById(id).style.display='none'); }
-function show(id)  { document.getElementById(id).style.display='block'; }
+function hideAll() {
+  ['v-empty','v-week','v-overview','v-charts','v-config'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display='none';
+  });
+  ['btn-overview','btn-charts'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.classList.remove('active-view');
+  });
+}
+function show(id) { const el=document.getElementById(id); if(el) el.style.display='block'; }
 
 function selectWeek(id) {
-  setActiveId(id); renderSidebar(); hideAll(); show('v-week'); renderWeek();
+  currentView='week'; setActiveId(id); renderSidebar(); hideAll(); show('v-week'); renderWeek();
 }
 function showOverview() {
-  setActiveId(null); renderSidebar(); hideAll(); show('v-overview'); renderOverview();
+  currentView='overview'; setActiveId(null); renderSidebar(); hideAll();
+  show('v-overview'); document.getElementById('btn-overview').classList.add('active-view');
+  renderOverview();
 }
-function showConfig() { hideAll(); show('v-config'); renderConfig(); }
+function showConfig() { currentView='config'; hideAll(); show('v-config'); renderConfig(); }
+function showCharts() {
+  currentView='charts'; setActiveId(null); renderSidebar(); hideAll();
+  show('v-charts'); document.getElementById('btn-charts').classList.add('active-view');
+  renderCharts();
+}
 
+// ── WEEK VIEW ──
 function renderWeek() {
   const w = getData().weeks.find(x=>x.id===getActiveId()); if (!w) return;
   const sum = sumWeek(w);
@@ -584,7 +620,6 @@ function updateValue(city, wid, kid, val) {
   if (!w.values) w.values={};
   w.values[kid] = val===''?null:parseFloat(val);
   renderSidebar();
-
   const inp = document.querySelector(`input[data-city="${city}"][data-wid="${wid}"][data-kid="${kid}"]`);
   if (inp) {
     const row = inp.closest('tr');
@@ -607,6 +642,7 @@ function updateValue(city, wid, kid, val) {
   scheduleSave(city, w);
 }
 
+// ── OVERVIEW ──
 function renderOverview() {
   const weeks = getData().weeks;
   const city  = CITIES[currentCity].label;
@@ -638,13 +674,170 @@ function renderOverview() {
   document.getElementById('v-overview').innerHTML=html;
 }
 
+// ── CHARTS VIEW ──
+let _charts = {};
+
+function renderCharts() {
+  const weeks = getData().weeks;
+  const city  = CITIES[currentCity].label;
+  const el    = document.getElementById('v-charts');
+
+  if (!weeks.length) {
+    el.innerHTML=`<div class="empty-state" style="min-height:300px"><div class="empty-title">Sin semanas — ${city}</div><div class="empty-sub">Agrega semanas con datos para ver las gráficas.</div></div>`;
+    return;
+  }
+
+  // destroy previous Chart instances
+  Object.values(_charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  _charts = {};
+
+  const sorted = [...weeks].sort((a,b) => a.year*100+a.weekNum-(b.year*100+b.weekNum));
+  const latest = sorted[sorted.length - 1];
+  const allKpis = KPI_DEFS.flatMap(s => s.kpis);
+
+  const failing = allKpis.filter(k => getStatus(k, latest.values?.[k.id]) === 'bad');
+  const warning = allKpis.filter(k => getStatus(k, latest.values?.[k.id]) === 'warn');
+
+  // ── Alert panel ──
+  let alertHtml = '';
+  const fmtTag = (k, cls) => {
+    const v = latest.values?.[k.id];
+    const vStr = (v!==null&&v!==undefined&&v!=='') ? parseFloat(v).toFixed(1)+k.unit : 'Sin dato';
+    const mStr = k.meta!==null ? k.meta+k.unit : (k.ml||'—');
+    return `<div class="ch-tag ${cls}"><strong>${k.name}</strong><span class="mono">Real: ${vStr} · Meta: ${mStr}</span></div>`;
+  };
+
+  if (failing.length || warning.length) {
+    const panelCls = failing.length ? 'bad' : 'warn';
+    const titleCls = failing.length ? 'bad' : 'warn';
+    const icon = failing.length
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>`
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`;
+    alertHtml = `<div class="ch-alert ${panelCls}">
+      <div class="ch-alert-title ${titleCls}">${icon}
+        ${failing.length ? 'KPIs incumpliendo' : 'KPIs en riesgo'} — ${city} · Sem ${latest.weekNum}/${latest.year}
+      </div>
+      <div class="ch-tags">
+        ${failing.map(k => fmtTag(k,'bad')).join('')}
+        ${warning.map(k => fmtTag(k,'warn')).join('')}
+      </div>
+    </div>`;
+  } else {
+    const allFilled = allKpis.every(k => getStatus(k, latest.values?.[k.id]) !== 'empty');
+    if (allFilled) {
+      alertHtml = `<div class="ch-alert ok">
+        <div class="ch-alert-title ok">&#10003; Todos los KPIs de Sem ${latest.weekNum}/${latest.year} cumplen sus metas — ${city}</div>
+      </div>`;
+    }
+  }
+
+  // ── Section charts ──
+  const weekLabels = sorted.map(w => `S${w.weekNum}\n${w.year}`);
+  let sectionsHtml = KPI_DEFS.map((sec, si) => {
+    const cards = sec.kpis.map((kpi, ki) => {
+      const lv = latest.values?.[kpi.id];
+      const ls = getStatus(kpi, lv);
+      const lsLabel = {ok:'✓ Cumple',warn:'⚠ En riesgo',bad:'✗ Incumple',empty:'— Sin dato'}[ls];
+      const lvStr = (lv!==null&&lv!==undefined&&lv!=='') ? ` · ${parseFloat(lv).toFixed(1)}${kpi.unit}` : '';
+      return `<div class="ch-card">
+        <div class="ch-name">${kpi.name}</div>
+        <div class="ch-status ${ls}">${lsLabel}${lvStr}</div>
+        <div class="ch-box"><canvas id="c_${si}_${ki}"></canvas></div>
+      </div>`;
+    }).join('');
+    return `<div class="ch-section">
+      <div class="ch-sec-title">${sec.section}</div>
+      <div class="ch-grid">${cards}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="ch-wrap">${alertHtml}${sectionsHtml}</div>`;
+
+  // ── Instantiate Chart.js ──
+  Chart.defaults.color = '#888';
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+  Chart.defaults.font.size = 10;
+
+  KPI_DEFS.forEach((sec, si) => {
+    sec.kpis.forEach((kpi, ki) => {
+      const canvas = document.getElementById(`c_${si}_${ki}`);
+      if (!canvas) return;
+
+      const values = sorted.map(w => {
+        const v = w.values?.[kpi.id];
+        return (v!==null&&v!==undefined&&v!=='') ? parseFloat(v) : null;
+      });
+
+      const dotColors = values.map(v => {
+        if (v===null) return 'transparent';
+        const s = getStatus(kpi, v);
+        return s==='ok'?'#959B7B':s==='warn'?'#E5B611':'#921A28';
+      });
+
+      const datasets = [{
+        data: values,
+        borderColor: '#E5B611',
+        backgroundColor: 'rgba(229,182,17,0.07)',
+        borderWidth: 2,
+        pointBackgroundColor: dotColors,
+        pointBorderColor: dotColors,
+        pointRadius: 5,
+        fill: true,
+        tension: 0.35,
+        spanGaps: true,
+      }];
+
+      if (kpi.meta !== null) {
+        datasets.push({
+          data: Array(sorted.length).fill(kpi.meta),
+          borderColor: 'rgba(146,26,40,0.5)',
+          borderDash: [5,3],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+        });
+      }
+
+      const nums = values.filter(v=>v!==null);
+      const lo = nums.length ? Math.min(...nums, kpi.meta??Infinity)  : 0;
+      const hi = nums.length ? Math.max(...nums, kpi.meta??-Infinity) : 100;
+      const pad = (hi-lo)*0.25 || 5;
+
+      _charts[`${si}_${ki}`] = new Chart(canvas, {
+        type: 'line',
+        data: { labels: weekLabels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: {
+              label: c => c.datasetIndex===1
+                ? ` Meta: ${kpi.meta}${kpi.unit}`
+                : c.parsed.y!==null ? ` ${c.parsed.y.toFixed(1)} ${kpi.unit}` : ' Sin dato'
+            }}
+          },
+          scales: {
+            x: { grid:{color:'rgba(0,0,0,0.05)'}, ticks:{color:'#aaa'} },
+            y: {
+              min: Math.max(0, lo-pad), max: hi+pad,
+              grid:{color:'rgba(0,0,0,0.05)'},
+              ticks:{color:'#aaa', callback: v => v%1===0?v:v.toFixed(1)}
+            }
+          }
+        }
+      });
+    });
+  });
+}
+
+// ── CONFIG ──
 function renderConfig() {
-  const city = CITIES[currentCity];
   document.getElementById('v-config').innerHTML=`<div class="cfg-wrap">
     <div class="cfg-title">Estado de conexión</div>
     <div class="cfg-sub">El tablero está conectado a Supabase. Todos los datos se comparten en tiempo real entre usuarios.</div>
     <div class="cfg-card">
-      <div class="cfg-card-title"><span class="cfg-step">✓</span> Base de datos conectada</div>
+      <div class="cfg-card-title"><span class="cfg-step">&#10003;</span> Base de datos conectada</div>
       <div class="cfg-hint">
         <strong>Proyecto:</strong> tuvfweobjbzgvrqfsujy.supabase.co<br>
         <strong>Tabla:</strong> kpi_weeks<br>
@@ -656,7 +849,7 @@ function renderConfig() {
     <div class="cfg-card" style="background:var(--surface2)">
       <div class="cfg-card-title" style="font-size:12px;color:var(--text3)">Cómo compartir</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.6">
-        Comparte la URL de Netlify con tu equipo.<br>
+        Comparte la URL con tu equipo.<br>
         Todos verán los mismos datos de <strong>Yopal</strong> y <strong>Villavicencio</strong> en tiempo real.
       </div>
       <div style="background:var(--surface);border-radius:6px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);word-break:break-all;margin-top:8px;border:0.5px solid var(--border-m)">
@@ -667,13 +860,13 @@ function renderConfig() {
 }
 
 async function testSupabase() {
-  document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-inf">⟳ Probando conexión...</span>`;
+  document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-inf">&#8635; Probando conexión...</span>`;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/kpi_weeks?select=count`, { headers: SB_HEADERS });
-    if (res.ok) document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-ok">✓ Conexión exitosa con Supabase</span>`;
-    else document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-err">✗ Error HTTP ${res.status}</span>`;
+    if (res.ok) document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-ok">&#10003; Conexión exitosa con Supabase</span>`;
+    else document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-err">&#10007; Error HTTP ${res.status}</span>`;
   } catch(e) {
-    document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-err">✗ Sin conexión</span>`;
+    document.getElementById('cfg-status').innerHTML=`<span class="status-msg s-msg-err">&#10007; Sin conexión</span>`;
   }
 }
 
@@ -727,5 +920,4 @@ switchCity(currentCity);
 </script>
 </body>
 </html>
-
-
+Agregar vista de gráficas KPI
