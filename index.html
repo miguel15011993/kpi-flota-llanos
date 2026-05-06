@@ -163,28 +163,70 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .htable tr:last-child td{border-bottom:none}
 
 /* ── CHARTS VIEW ── */
-.ch-wrap{padding:1.25rem 1.5rem 2rem}
+.ch-wrap{padding:1.5rem 1.5rem 2rem}
+
+/* Summary strip */
+.ch-summary{display:grid;grid-template-columns:repeat(4,1fr) 160px;gap:12px;margin-bottom:1.5rem;align-items:stretch}
+.ch-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:5px;border-left:4px solid}
+.ch-stat.ok{border-left-color:var(--ok-m)} .ch-stat.warn{border-left-color:var(--warn-m)}
+.ch-stat.bad{border-left-color:var(--bad-m)} .ch-stat.empty{border-left-color:var(--border-m)}
+.ch-stat-num{font-size:38px;font-weight:700;letter-spacing:-1.5px;line-height:1}
+.ch-stat.ok   .ch-stat-num{color:var(--ok)}   .ch-stat.warn .ch-stat-num{color:var(--warn)}
+.ch-stat.bad  .ch-stat-num{color:var(--bad)}  .ch-stat.empty .ch-stat-num{color:var(--text3)}
+.ch-stat-lbl{font-size:12px;color:var(--text3);font-weight:500}
+.ch-stat-pct{font-size:11px;font-family:'DM Mono',monospace;margin-top:2px}
+.ch-donut-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.75rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.ch-donut-box{width:110px;height:110px;position:relative}
+.ch-donut-lbl{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+
+/* Alert */
 .ch-alert{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
 .ch-alert.bad{background:var(--bad-l);border:1px solid rgba(146,26,40,0.25)}
 .ch-alert.warn{background:var(--warn-l);border:1px solid rgba(229,182,17,0.35)}
 .ch-alert.ok{background:var(--ok-l);border:1px solid rgba(149,155,123,0.4)}
-.ch-alert-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ch-alert-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .ch-alert-title.bad{color:var(--bad)} .ch-alert-title.warn{color:var(--warn)} .ch-alert-title.ok{color:var(--ok)}
-.ch-tags{display:flex;flex-wrap:wrap;gap:8px}
-.ch-tag{border-radius:6px;padding:6px 10px;font-size:12px;line-height:1.5}
+.ch-tags{display:flex;flex-wrap:wrap;gap:10px}
+.ch-tag{border-radius:8px;padding:10px 14px;font-size:12px;line-height:1.5;min-width:190px}
 .ch-tag.bad{background:rgba(146,26,40,0.1);border:1px solid rgba(146,26,40,0.3);color:var(--bad)}
 .ch-tag.warn{background:rgba(229,182,17,0.12);border:1px solid rgba(229,182,17,0.4);color:var(--warn)}
-.ch-tag strong{display:block;font-weight:600;margin-bottom:2px}
-.ch-tag .mono{font-family:'DM Mono',monospace;font-size:11px}
-.ch-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem}
-.ch-sec-title{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.ch-sec-title::after{content:'';flex:1;height:0.5px;background:var(--border-m)}
-.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.ch-card{display:flex;flex-direction:column;gap:5px}
-.ch-name{font-size:11px;color:var(--text2);font-weight:500;line-height:1.3}
-.ch-status{font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
-.ch-status.ok{color:var(--ok)} .ch-status.warn{color:var(--warn)} .ch-status.bad{color:var(--bad)} .ch-status.empty{color:var(--text3)}
-.ch-box{position:relative;height:120px}
+.ch-tag strong{display:block;font-weight:700;font-size:13px;margin-bottom:5px}
+.ch-tag-vals{display:flex;gap:14px;font-family:'DM Mono',monospace;font-size:12px;align-items:baseline}
+.ch-tag-real{font-size:20px;font-weight:700}
+.ch-tag-meta{opacity:.65;font-size:11px}
+
+/* Section */
+.ch-section{margin-bottom:1.75rem}
+.ch-sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ch-sec-title{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+.ch-sec-line{flex:1;height:0.5px;background:var(--border-m)}
+.ch-fpill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.ch-fps{background:var(--info-l);color:var(--info)} .ch-fpm{background:var(--warn-l);color:var(--warn)}
+
+/* KPI Cards */
+.ch-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.ch-kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:box-shadow .15s,transform .15s}
+.ch-kpi-card:hover{box-shadow:0 6px 18px rgba(0,0,0,0.09);transform:translateY(-1px)}
+.ch-kpi-card.ok   {border-top:3px solid var(--ok-m)}
+.ch-kpi-card.warn {border-top:3px solid var(--warn-m)}
+.ch-kpi-card.bad  {border-top:3px solid var(--bad-m)}
+.ch-kpi-card.empty{border-top:3px solid var(--border-m)}
+.ch-kpi-top{padding:14px 16px 0}
+.ch-kpi-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.ch-kpi-name{font-size:12px;font-weight:600;color:var(--text2);line-height:1.35;flex:1}
+.ch-kpi-val-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.ch-kpi-val-big{font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1;font-family:'DM Mono',monospace}
+.ch-kpi-val-big.ok{color:var(--ok)} .ch-kpi-val-big.warn{color:var(--warn)}
+.ch-kpi-val-big.bad{color:var(--bad)} .ch-kpi-val-big.empty{color:var(--text3)}
+.ch-kpi-unit{font-size:14px;color:var(--text3);font-family:'DM Mono',monospace}
+.ch-kpi-meta-txt{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:8px}
+.ch-prog-wrap{margin-bottom:12px;position:relative}
+.ch-prog-track{height:7px;background:var(--surface2);border-radius:4px;position:relative;overflow:hidden}
+.ch-prog-fill{height:100%;border-radius:4px;transition:width .5s}
+.ch-prog-meta{position:absolute;top:0;width:2px;height:100%;background:rgba(146,26,40,0.7)}
+.ch-chart-area{padding:0 16px 14px}
+.ch-chart-lbl{font-size:9px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.ch-chart-box{height:110px;position:relative}
 
 /* ── CONFIG ── */
 .cfg-wrap{padding:1.5rem;max-width:560px}
@@ -211,7 +253,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .sum-strip{grid-template-columns:repeat(2,1fr)}
   .cal-grid{grid-template-columns:repeat(2,1fr)}
   .topbar-right .sync-pill{display:none}
-  .ch-grid{grid-template-columns:1fr}
+  .ch-summary{grid-template-columns:repeat(2,1fr)}
+  .ch-kpi-grid{grid-template-columns:1fr}
 }
 @media print{.topbar,.city-bar,.sidebar,.page-footer{display:none}.main{overflow:visible}}
 </style>
@@ -687,77 +730,167 @@ function renderCharts() {
     return;
   }
 
-  // destroy previous Chart instances
   Object.values(_charts).forEach(c => { try { c.destroy(); } catch(e){} });
   _charts = {};
 
-  const sorted = [...weeks].sort((a,b) => a.year*100+a.weekNum-(b.year*100+b.weekNum));
-  const latest = sorted[sorted.length - 1];
+  const sorted  = [...weeks].sort((a,b) => a.year*100+a.weekNum-(b.year*100+b.weekNum));
+  const latest  = sorted[sorted.length - 1];
   const allKpis = KPI_DEFS.flatMap(s => s.kpis);
+  const total   = allKpis.length;
+
+  let cOk=0, cWarn=0, cBad=0, cEmpty=0;
+  allKpis.forEach(k => {
+    const s = getStatus(k, latest.values?.[k.id]);
+    if(s==='ok')cOk++; else if(s==='warn')cWarn++; else if(s==='bad')cBad++; else cEmpty++;
+  });
 
   const failing = allKpis.filter(k => getStatus(k, latest.values?.[k.id]) === 'bad');
   const warning = allKpis.filter(k => getStatus(k, latest.values?.[k.id]) === 'warn');
+
+  // ── Summary strip ──
+  const summaryHtml = `<div class="ch-summary">
+    <div class="ch-stat ok">
+      <div class="ch-stat-num">${cOk}</div>
+      <div class="ch-stat-lbl">Cumpliendo</div>
+      <div class="ch-stat-pct" style="color:var(--ok)">${total?Math.round(cOk/total*100):0}% del total</div>
+    </div>
+    <div class="ch-stat warn">
+      <div class="ch-stat-num">${cWarn}</div>
+      <div class="ch-stat-lbl">En riesgo</div>
+      <div class="ch-stat-pct" style="color:var(--warn)">${total?Math.round(cWarn/total*100):0}% del total</div>
+    </div>
+    <div class="ch-stat bad">
+      <div class="ch-stat-num">${cBad}</div>
+      <div class="ch-stat-lbl">Incumpliendo</div>
+      <div class="ch-stat-pct" style="color:var(--bad)">${total?Math.round(cBad/total*100):0}% del total</div>
+    </div>
+    <div class="ch-stat empty">
+      <div class="ch-stat-num">${cEmpty}</div>
+      <div class="ch-stat-lbl">Sin dato</div>
+      <div class="ch-stat-pct" style="color:var(--text3)">Sem ${latest.weekNum}/${latest.year}</div>
+    </div>
+    <div class="ch-donut-card">
+      <div class="ch-donut-lbl">Distribución</div>
+      <div class="ch-donut-box"><canvas id="ch-donut"></canvas></div>
+    </div>
+  </div>`;
 
   // ── Alert panel ──
   let alertHtml = '';
   const fmtTag = (k, cls) => {
     const v = latest.values?.[k.id];
-    const vStr = (v!==null&&v!==undefined&&v!=='') ? parseFloat(v).toFixed(1)+k.unit : 'Sin dato';
+    const vStr = (v!==null&&v!==undefined&&v!=='') ? parseFloat(v).toFixed(1) : '—';
     const mStr = k.meta!==null ? k.meta+k.unit : (k.ml||'—');
-    return `<div class="ch-tag ${cls}"><strong>${k.name}</strong><span class="mono">Real: ${vStr} · Meta: ${mStr}</span></div>`;
-  };
-
-  if (failing.length || warning.length) {
-    const panelCls = failing.length ? 'bad' : 'warn';
-    const titleCls = failing.length ? 'bad' : 'warn';
-    const icon = failing.length
-      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>`
-      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`;
-    alertHtml = `<div class="ch-alert ${panelCls}">
-      <div class="ch-alert-title ${titleCls}">${icon}
-        ${failing.length ? 'KPIs incumpliendo' : 'KPIs en riesgo'} — ${city} · Sem ${latest.weekNum}/${latest.year}
-      </div>
-      <div class="ch-tags">
-        ${failing.map(k => fmtTag(k,'bad')).join('')}
-        ${warning.map(k => fmtTag(k,'warn')).join('')}
+    return `<div class="ch-tag ${cls}">
+      <strong>${k.name}</strong>
+      <div class="ch-tag-vals">
+        <span class="ch-tag-real">${vStr}<span style="font-size:12px;font-weight:400">${k.unit}</span></span>
+        <span class="ch-tag-meta">meta ${mStr}</span>
       </div>
     </div>`;
-  } else {
-    const allFilled = allKpis.every(k => getStatus(k, latest.values?.[k.id]) !== 'empty');
-    if (allFilled) {
-      alertHtml = `<div class="ch-alert ok">
-        <div class="ch-alert-title ok">&#10003; Todos los KPIs de Sem ${latest.weekNum}/${latest.year} cumplen sus metas — ${city}</div>
-      </div>`;
-    }
+  };
+  if (failing.length || warning.length) {
+    const pc = failing.length ? 'bad' : 'warn';
+    const icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="${failing.length?'M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z':'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'}"/></svg>`;
+    alertHtml = `<div class="ch-alert ${pc}">
+      <div class="ch-alert-title ${pc}">${icon}
+        ${failing.length ? `${failing.length} KPI${failing.length>1?'s':''} incumpliendo` : `${warning.length} KPI${warning.length>1?'s':''} en riesgo`}
+        — ${city} · Sem ${latest.weekNum}/${latest.year}
+      </div>
+      <div class="ch-tags">
+        ${failing.map(k=>fmtTag(k,'bad')).join('')}
+        ${warning.map(k=>fmtTag(k,'warn')).join('')}
+      </div>
+    </div>`;
+  } else if (cEmpty < total) {
+    alertHtml = `<div class="ch-alert ok">
+      <div class="ch-alert-title ok">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        Todos los KPIs cumplen sus metas — ${city} · Sem ${latest.weekNum}/${latest.year}
+      </div>
+    </div>`;
   }
 
-  // ── Section charts ──
-  const weekLabels = sorted.map(w => `S${w.weekNum}\n${w.year}`);
-  let sectionsHtml = KPI_DEFS.map((sec, si) => {
+  // ── KPI section cards ──
+  const weekLabels = sorted.map(w => `S${w.weekNum}`);
+  const sectionsHtml = KPI_DEFS.map((sec, si) => {
+    const fl = sec.freq==='sem'?'Semanal':'Mensual';
+    const fc = sec.freq==='sem'?'ch-fps':'ch-fpm';
     const cards = sec.kpis.map((kpi, ki) => {
-      const lv = latest.values?.[kpi.id];
-      const ls = getStatus(kpi, lv);
-      const lsLabel = {ok:'✓ Cumple',warn:'⚠ En riesgo',bad:'✗ Incumple',empty:'— Sin dato'}[ls];
-      const lvStr = (lv!==null&&lv!==undefined&&lv!=='') ? ` · ${parseFloat(lv).toFixed(1)}${kpi.unit}` : '';
-      return `<div class="ch-card">
-        <div class="ch-name">${kpi.name}</div>
-        <div class="ch-status ${ls}">${lsLabel}${lvStr}</div>
-        <div class="ch-box"><canvas id="c_${si}_${ki}"></canvas></div>
+      const lv  = latest.values?.[kpi.id];
+      const lvN = (lv!==null&&lv!==undefined&&lv!=='') ? parseFloat(lv) : null;
+      const ls  = getStatus(kpi, lv);
+      const lsLabel = {ok:'✓ Cumple',warn:'⚠ En riesgo',bad:'✗ Incumple',empty:'Sin dato'}[ls];
+      const lsCls   = {ok:'s-ok',   warn:'s-warn',     bad:'s-bad',   empty:'s-mt'}[ls];
+      const valStr  = lvN!==null ? lvN.toFixed(1) : '—';
+
+      // Progress bar for % KPIs
+      let progHtml = '';
+      if (kpi.unit==='%' && kpi.meta!==null && lvN!==null) {
+        const pct  = Math.min(100, Math.max(0, lvN));
+        const mPct = Math.min(100, kpi.meta);
+        const fc2  = ls==='ok'?'var(--ok-m)':ls==='warn'?'var(--warn-m)':'var(--bad-m)';
+        progHtml = `<div class="ch-prog-wrap">
+          <div class="ch-prog-track">
+            <div class="ch-prog-fill" style="width:${pct}%;background:${fc2}"></div>
+          </div>
+          <div class="ch-prog-meta" style="left:calc(${mPct}% - 1px)"></div>
+        </div>`;
+      }
+
+      return `<div class="ch-kpi-card ${ls}">
+        <div class="ch-kpi-top">
+          <div class="ch-kpi-header">
+            <div class="ch-kpi-name">${kpi.name}</div>
+            <span class="sbadge ${lsCls}"><span class="sdot"></span>${lsLabel}</span>
+          </div>
+          <div class="ch-kpi-val-row">
+            <div class="ch-kpi-val-big ${ls}">${valStr}</div>
+            <div class="ch-kpi-unit">${kpi.unit}</div>
+          </div>
+          <div class="ch-kpi-meta-txt">Meta: ${kpi.meta!==null?kpi.meta+kpi.unit:(kpi.ml||'—')}</div>
+          ${progHtml}
+        </div>
+        <div class="ch-chart-area">
+          <div class="ch-chart-lbl">Tendencia semanal</div>
+          <div class="ch-chart-box"><canvas id="c_${si}_${ki}"></canvas></div>
+        </div>
       </div>`;
     }).join('');
+
     return `<div class="ch-section">
-      <div class="ch-sec-title">${sec.section}</div>
-      <div class="ch-grid">${cards}</div>
+      <div class="ch-sec-hdr">
+        <div class="ch-sec-title">${sec.section}</div>
+        <span class="ch-fpill ${fc}">${fl}</span>
+        <div class="ch-sec-line"></div>
+      </div>
+      <div class="ch-kpi-grid">${cards}</div>
     </div>`;
   }).join('');
 
-  el.innerHTML = `<div class="ch-wrap">${alertHtml}${sectionsHtml}</div>`;
+  el.innerHTML = `<div class="ch-wrap">${summaryHtml}${alertHtml}${sectionsHtml}</div>`;
 
-  // ── Instantiate Chart.js ──
+  // ── Donut chart ──
   Chart.defaults.color = '#888';
   Chart.defaults.font.family = "'DM Sans', sans-serif";
   Chart.defaults.font.size = 10;
 
+  const donutCanvas = document.getElementById('ch-donut');
+  if (donutCanvas) {
+    _charts['donut'] = new Chart(donutCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Cumple','En riesgo','Incumple','Sin dato'],
+        datasets: [{ data:[cOk,cWarn,cBad,cEmpty], backgroundColor:['#959B7B','#E5B611','#921A28','#ddd'], borderWidth:0, hoverOffset:4 }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false, cutout:'68%',
+        plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: c => ` ${c.label}: ${c.parsed}` } } }
+      }
+    });
+  }
+
+  // ── Bar charts per KPI ──
   KPI_DEFS.forEach((sec, si) => {
     sec.kpis.forEach((kpi, ki) => {
       const canvas = document.getElementById(`c_${si}_${ki}`);
@@ -768,29 +901,26 @@ function renderCharts() {
         return (v!==null&&v!==undefined&&v!=='') ? parseFloat(v) : null;
       });
 
-      const dotColors = values.map(v => {
-        if (v===null) return 'transparent';
+      const barColors = values.map(v => {
+        if (v===null) return 'rgba(0,0,0,0.06)';
         const s = getStatus(kpi, v);
-        return s==='ok'?'#959B7B':s==='warn'?'#E5B611':'#921A28';
+        return s==='ok'?'rgba(149,155,123,0.85)':s==='warn'?'rgba(229,182,17,0.85)':'rgba(146,26,40,0.85)';
       });
 
       const datasets = [{
+        label: kpi.unit,
         data: values,
-        borderColor: '#E5B611',
-        backgroundColor: 'rgba(229,182,17,0.07)',
-        borderWidth: 2,
-        pointBackgroundColor: dotColors,
-        pointBorderColor: dotColors,
-        pointRadius: 5,
-        fill: true,
-        tension: 0.35,
-        spanGaps: true,
+        backgroundColor: barColors,
+        borderRadius: 4,
+        borderSkipped: false,
       }];
 
       if (kpi.meta !== null) {
         datasets.push({
+          type: 'line',
+          label: 'Meta',
           data: Array(sorted.length).fill(kpi.meta),
-          borderColor: 'rgba(146,26,40,0.5)',
+          borderColor: 'rgba(146,26,40,0.6)',
           borderDash: [5,3],
           borderWidth: 1.5,
           pointRadius: 0,
@@ -798,17 +928,16 @@ function renderCharts() {
         });
       }
 
-      const nums = values.filter(v=>v!==null);
+      const nums = values.filter(v => v!==null);
       const lo = nums.length ? Math.min(...nums, kpi.meta??Infinity)  : 0;
       const hi = nums.length ? Math.max(...nums, kpi.meta??-Infinity) : 100;
-      const pad = (hi-lo)*0.25 || 5;
+      const pad = (hi-lo)*0.2 || 5;
 
       _charts[`${si}_${ki}`] = new Chart(canvas, {
-        type: 'line',
+        type: 'bar',
         data: { labels: weekLabels, datasets },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive:true, maintainAspectRatio:false,
           plugins: {
             legend: { display: false },
             tooltip: { callbacks: {
@@ -818,11 +947,11 @@ function renderCharts() {
             }}
           },
           scales: {
-            x: { grid:{color:'rgba(0,0,0,0.05)'}, ticks:{color:'#aaa'} },
+            x: { grid:{display:false}, ticks:{color:'#aaa',font:{size:9}} },
             y: {
               min: Math.max(0, lo-pad), max: hi+pad,
-              grid:{color:'rgba(0,0,0,0.05)'},
-              ticks:{color:'#aaa', callback: v => v%1===0?v:v.toFixed(1)}
+              grid:{color:'rgba(0,0,0,0.04)'},
+              ticks:{color:'#aaa', font:{size:9}, callback: v => v%1===0?v:v.toFixed(1)}
             }
           }
         }
@@ -920,4 +1049,3 @@ switchCity(currentCity);
 </script>
 </body>
 </html>
-Agregar vista de gráficas KPI
